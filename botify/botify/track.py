@@ -78,16 +78,24 @@ class Catalog:
         )
 
     def upload_artists(self, redis):
+        """
+        Seminar 2: for sticki_artist
+        """
         self.app.logger.info(f"Uploading artists to redis")
+        # отсортируем треки по исполнителю
         sorted_tracks = sorted(self.tracks, key=lambda track: track.artist)
+        # пройдемся по полученному списку
         for j, (artist, artist_catalog) in enumerate(
             itertools.groupby(sorted_tracks, key=lambda track: track.artist)
-        ):
-            artist_tracks = [t.track for t in artist_catalog]
-            redis.set(artist, self.to_bytes(artist_tracks))
-        self.app.logger.info(f"Uploaded {j + 1} artists")
+        ):  # groupby: для каждого исполнителя - список треков
+            artist_tracks = [t.track for t in artist_catalog]  # только id'шники треков исполнителя
+            redis.set(artist, self.to_bytes(artist_tracks))  # подгрузим все в redis
+        self.app.logger.info(f"Uploaded {j + 1} artists")  # запишем в лог кол-во загруженных исполнителей
 
     def upload_recommendations(self, redis, recommendations_path="RECOMMENDATIONS_FILE_PATH"):
+        """
+        Seminar 3: for indexed
+        """
         recommendations_file_path = self.app.config[recommendations_path]
 
         self.app.logger.info(
@@ -95,12 +103,12 @@ class Catalog:
         )
 
         j = 0
-        with open(recommendations_file_path) as rf:
+        with open(recommendations_file_path) as rf:  # построчно проходим по файлу
             for line in rf:
                 recommendations = json.loads(line)
                 redis.set(
                     recommendations["user"], self.to_bytes(recommendations["tracks"])
-                )
+                )  # user - recommendations list
                 j += 1
         self.app.logger.info(f"Uploaded recommendations for {j} users")
 

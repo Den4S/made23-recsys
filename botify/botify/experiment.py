@@ -59,12 +59,17 @@ class Experiments:
     # TODO Seminar 6 step 5: Configure RECOMMENDERS A/B experiment
 
     AA = Experiment("AA", Split.HALF_HALF)
+    # seminar 2: делим пользователей на две части
     STICKY_ARTIST = Experiment("STICKY_ARTIST", Split.HALF_HALF)
+    # seminar 3: запустим 3 тритмента (+ 1 контроль)
     TOP_POP = Experiment("TOP_POP", Split.FOUR_WAY)
+    # seminar 4
     USER_BASED = Experiment("USER_BASED", Split.HALF_HALF)
+    # seminar 5
     PERSONALIZED = Experiment("PERSONALIZED", Split.HALF_HALF)
+    # seminar 6
     CONTEXTUAL = Experiment("CONTEXTUAL", Split.HALF_HALF)
     RECOMMENDERS = Experiment("RECOMMENDERS", Split.SEVEN_WAY)
 
     def __init__(self):
-        self.experiments = [Experiments.RECOMMENDERS]
+        self.experiments = [Experiments.RECOMMENDERS]  # НЕ ЗАБЫТЬ ВКЛЮЧИТЬ!
