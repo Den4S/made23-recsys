@@ -70,6 +70,8 @@ class Experiments:
     # seminar 6
     CONTEXTUAL = Experiment("CONTEXTUAL", Split.HALF_HALF)
     RECOMMENDERS = Experiment("RECOMMENDERS", Split.SEVEN_WAY)
+    # HOMEWORK
+    HW = Experiment("HW", Split.HALF_HALF)
 
     def __init__(self):
-        self.experiments = [Experiments.RECOMMENDERS]  # НЕ ЗАБЫТЬ ВКЛЮЧИТЬ!
+        self.experiments = [Experiments.HW]  # НЕ ЗАБЫТЬ ВКЛЮЧИТЬ!

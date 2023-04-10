@@ -17,6 +17,9 @@ from botify.recommenders.toppop import TopPop
 from botify.recommenders.indexed import Indexed
 from botify.recommenders.contextual import Contextual
 from botify.track import Catalog
+# HOMEWORK
+from botify.recommenders.hw_sticky_pop import StickyPop
+from botify.recommenders.hw_weighted import Weighted
 
 import numpy as np
 
@@ -53,6 +56,10 @@ parser = reqparse.RequestParser()
 parser.add_argument("track", type=int, location="json", required=True)
 parser.add_argument("time", type=float, location="json", required=True)
 
+# dicts for hw_sticky_pop.py
+users_likes = {}
+users_dislikes = {}
+users_current_recs = {}
 
 class Hello(Resource):
     def get(self):
@@ -77,7 +84,8 @@ class NextTrack(Resource):
 
         args = parser.parse_args()
 
-        # TODO Seminar 6 step 6: Wire RECOMMENDERS A/B experiment
+        """
+        # SEMINARS
         # вызываем созданный нами эксперимент!
         treatment = Experiments.RECOMMENDERS.assign(user)
         # делим пользователей на группы
@@ -112,6 +120,19 @@ class NextTrack(Resource):
             recommender = Contextual(tracks_with_diverse_recs_redis.connection, catalog)
         else:
             recommender = Random(tracks_redis.connection)  # контроль-группа
+        """
+        # HOMEWORK
+        treatment = Experiments.HW.assign(user)
+        if treatment == Treatment.T1:
+            # recommender = StickyPop(tracks_redis.connection, artists_redis.connection,
+            #                         catalog, users_likes, users_dislikes)
+            recommender = Weighted(tracks_redis.connection,
+                                   recommendations_redis.connection,
+                                   catalog,
+                                   users_likes, users_dislikes,
+                                   users_current_recs)
+        else:
+            recommender = Contextual(tracks_redis.connection, catalog)
 
         recommendation = recommender.recommend_next(user, args.track, args.time)
 
